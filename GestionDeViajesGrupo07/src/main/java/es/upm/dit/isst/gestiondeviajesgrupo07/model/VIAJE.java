@@ -6,8 +6,10 @@ package es.upm.dit.isst.gestiondeviajesgrupo07.model;
 import java.io.Serializable;
 import java.util.*;
 
+import javax.annotation.Generated;
+
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.*;
 import com.googlecode.objectify.annotation.Index;
 
 /**
@@ -40,9 +42,8 @@ public class VIAJE implements Serializable {
 	@Index
 	private String motivo;
 	
-	private ArrayList<String> justificantes = new ArrayList<String>();
+	private ArrayList<JUSTIFICANTE> justificantes = new ArrayList<JUSTIFICANTE>();
 	
-	private String todosLosJustificantesString;
 	
 	public VIAJE(){
 	}
@@ -61,7 +62,6 @@ public class VIAJE implements Serializable {
 		this.destinoPais = destinoPais;
 		this.destinoProvincia = destinoProvincia;
 		this.motivo = motivo;
-		this.todosLosJustificantesString="No hay justificantes";
 	}
 	
 	public String getAllInfo(){
@@ -81,40 +81,73 @@ public class VIAJE implements Serializable {
 	 * Metodo para añadir un fichero al array de ficheros
 	 * @param fichero. Fichero a añadir
 	 */
-	public void addJustificante(String justificante){
-//		if (!justificantes.contains(justificante)){
+	public void addJustificante(JUSTIFICANTE justificante){
+		if (!justificantes.contains(justificante)){
 			justificantes.add(justificante);
-			updateAllJustificantes();
-//		}
-	}
-	/**
-	 * Metodo que devuelve un String con todos los ficheros separados en distintas filas.
-	 * @return String con todos los ficheros.
-	 */
-	public void updateAllJustificantes(){
-		String todosLosJustificantes = "";
-		int numeroJustificante = 1;
-		for (String justificante : justificantes) {
-			todosLosJustificantes = todosLosJustificantes + numeroJustificante + ": "+ justificante + "\n";
-			numeroJustificante ++;
 		}
-		setTodosLosJustificantesString(todosLosJustificantes);
+	}
+	public void deleteJustificante(JUSTIFICANTE justificante){
+		if (justificantes.contains(justificante)){
+			justificantes.remove(justificante);
+		}
 	}
 	
-	public ArrayList<String> getJustificantes() {
+	public ArrayList<JUSTIFICANTE> getJustificantes() {
 		return justificantes;
 	}
+	
+	public JUSTIFICANTE getJustificante(long numeroJustificante){
+		for (JUSTIFICANTE justificantei : justificantes) {
+			if(justificantei.getNumeroJustificante() == numeroJustificante){
+				return justificantei;
+			}
+		}
+		return null;
+	}
+	
+	public List<JUSTIFICANTE> getJustificantesEnviados() {
+		ArrayList<JUSTIFICANTE> justificantesEnviados = new ArrayList<JUSTIFICANTE>();
+		for (JUSTIFICANTE justificante : justificantes) {
+			if(justificante.getEstado() == 2){
+				justificantesEnviados.add(justificante);
+			}
+		}
+		return justificantesEnviados;
+	}
+	
+	public List<JUSTIFICANTE> getJustificantesSinEnviar() {
+		ArrayList<JUSTIFICANTE> justificantesSinEnviar = new ArrayList<JUSTIFICANTE>();
+		for (JUSTIFICANTE justificante : justificantes) {
+			if(justificante.getEstado()==1){
+				justificantesSinEnviar.add(justificante);
+			}
+		}
+		return justificantesSinEnviar;
+	}
+	
+	public List<JUSTIFICANTE> getJustificantesAprobados() {
+		ArrayList<JUSTIFICANTE> justificantesAprobados = new ArrayList<JUSTIFICANTE>();
+		for (JUSTIFICANTE justificante : justificantes) {
+			if(justificante.getEstado()==3){
+				justificantesAprobados.add(justificante);
+			}
+		}
+		return justificantesAprobados;
+	}
+	
 
-	public void setJustificantes(ArrayList<String> justificantes) {
+	public List<JUSTIFICANTE> getJustificantesPagados() {
+		ArrayList<JUSTIFICANTE> justificantesPagados = new ArrayList<JUSTIFICANTE>();
+		for (JUSTIFICANTE justificante : justificantes) {
+			if(justificante.getEstado()==4){
+				justificantesPagados.add(justificante);
+			}
+		}
+		return justificantesPagados;
+	}
+
+	public void setJustificantes(ArrayList<JUSTIFICANTE> justificantes) {
 		this.justificantes = justificantes;
-	}
-
-	public String getTodosLosJustificantesString() {
-		return todosLosJustificantesString;
-	}
-
-	public void setTodosLosJustificantesString(String todosLosJustificantesString) {
-		this.todosLosJustificantesString = todosLosJustificantesString;
 	}
 
 	/**

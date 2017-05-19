@@ -2,6 +2,7 @@ package es.upm.dit.isst.gestiondeviajesgrupo07;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,6 +16,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import es.upm.dit.isst.gestiondeviajesgrupo07.dao.VIAJESDAO;
 import es.upm.dit.isst.gestiondeviajesgrupo07.dao.VIAJESDAOImpl;
 import es.upm.dit.isst.gestiondeviajesgrupo07.model.EMPLEADO;
+import es.upm.dit.isst.gestiondeviajesgrupo07.model.PROYECTO;
 import es.upm.dit.isst.gestiondeviajesgrupo07.model.VIAJE;
 
 /**
@@ -39,31 +41,55 @@ public class ISST_VIAJES_IrAFormulario_Servlet extends HttpServlet {
 		String url = userService.createLoginURL(request.getRequestURI());
 		String urlLinktext = "Login";
 		String user = "";
-
 		if (request.getUserPrincipal() != null){
 			user = request.getUserPrincipal().getName();
 			url = userService.createLogoutURL(request.getRequestURI());
 			urlLinktext = "Logout";
 			
-			
 			VIAJESDAO dao = VIAJESDAOImpl.getInstancia();
 			
-			ArrayList<VIAJE> viajesEmpleado =  new ArrayList<VIAJE>();
-			ArrayList<VIAJE> viajesSupervisor = new ArrayList<VIAJE>();
-			viajesEmpleado.addAll(dao.readViajesEmpleado(user));
-			viajesSupervisor.addAll(dao.readViajesSuperivisor(user));
 			EMPLEADO empleado = dao.readEmpleado(user);
+			List<PROYECTO> proyectosEmpleado = dao.readProyectosEmpleado(empleado);
+			System.out.println(proyectosEmpleado);
 			
 			request.getSession().setAttribute("user", user);
 			request.getSession().setAttribute("url", url);
 			request.getSession().setAttribute("urlLinktext", urlLinktext);
-			request.getSession().setAttribute("viajesEmpleado", viajesEmpleado);
-			request.getSession().setAttribute("viajesSupervisor", viajesSupervisor);
 			request.getSession().setAttribute("empleado", empleado);
-			
+			request.getSession().setAttribute("proyectosEmpleado", proyectosEmpleado);
+//			response.sendRedirect("jsp/FormularioView.jsp");
 			RequestDispatcher view = request.getRequestDispatcher("jsp/FormularioView.jsp");
 			view.forward(request, response);
 		}
+		response.getWriter().println(
+				"<!DOCTYPE html>"+
+					"<html>" + 
+						"<head>"+
+						"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">" +
+						"<title>iTravel - Login</title>" +
+						"<link href=\"../css/main.css\" rel=\"stylesheet\" type=\"text/css\" media=\"all\">"+
+						"</head>"+
+						"<body>"+
+							"<div class=\"index\">"+
+						      	"<div class=\"container\">"+
+						      		"<div class=\"login\">"+
+						      			"<h1>Plataforma de Gestion de Viajes</h1>"+
+						      			"<h2>Inicie Sesion</h2>" +
+						      			"<a class=\"aceptarViaje\" href=\"" + url + "\">" + urlLinktext + "</a>"+
+					      			"</div>" +
+				      			" </div>" +
+			      			" </div>" +
+			      			"<div class=\"footer\">" +
+			      				"<div class=\"container\">" +
+			      					"<p> Grupo 7 </p>" +
+			      					"<p class=\"a-center\"><a href=\"https://www.upm.es\"> Universidad Politecnica De Madrid </a></p>" +
+			      					"<p class=\"p-right\" id=\"fecha\">ISST 2017</p>" +
+			      				"</div>" +
+						    "</div>" +
+					    "</body>"+
+					"</html>"
+			);
+//		response.getWriter().println("<p>Pulsa <a href=\"" + url + "\">" + urlLinktext + "</a> para entrar.</p>");
 	}
 
 	/**

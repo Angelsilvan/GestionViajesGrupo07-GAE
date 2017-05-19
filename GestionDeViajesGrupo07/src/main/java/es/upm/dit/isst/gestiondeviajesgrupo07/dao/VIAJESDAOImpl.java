@@ -3,6 +3,7 @@ package es.upm.dit.isst.gestiondeviajesgrupo07.dao;
 import java.util.*;
 
 import es.upm.dit.isst.gestiondeviajesgrupo07.model.EMPLEADO;
+import es.upm.dit.isst.gestiondeviajesgrupo07.model.JUSTIFICANTE;
 import es.upm.dit.isst.gestiondeviajesgrupo07.model.PROYECTO;
 import es.upm.dit.isst.gestiondeviajesgrupo07.model.VIAJE;
 
@@ -25,6 +26,70 @@ public class VIAJESDAOImpl implements VIAJESDAO {
 
 	}
 	
+	//******** JUSTIFICANTES ************//
+	
+	@Override
+	public JUSTIFICANTE createJustificante(String concepto, long importe, String fichero, VIAJE viaje){
+		ArrayList<JUSTIFICANTE> todosLosJustificantesViaje = new ArrayList<>();
+		todosLosJustificantesViaje = viaje.getJustificantes();
+		List<JUSTIFICANTE> todosLosJustificantes = ofy().load().type(JUSTIFICANTE.class).list();
+		long idTotalMasAlto=0;
+		for(JUSTIFICANTE justificantei: todosLosJustificantes){
+			if(justificantei.getIdJustificante()>idTotalMasAlto){
+				idTotalMasAlto = justificantei.getIdJustificante();
+			}
+		}
+		long numeroIdJustificante = idTotalMasAlto+1;
+		
+		long idMasAlto=0;
+		for(JUSTIFICANTE justificantei: todosLosJustificantesViaje){
+			if(justificantei.getNumeroJustificante()>idMasAlto){
+				idMasAlto = justificantei.getNumeroJustificante();
+			}
+		}
+		long numeroJustificante = idMasAlto+1;
+		JUSTIFICANTE justificante = new JUSTIFICANTE(numeroIdJustificante, numeroJustificante, concepto, importe, fichero);
+		viaje.addJustificante(justificante);
+		ofy().save().entity(justificante).now();
+		ofy().save().entity(viaje).now();
+		return justificante;
+	}
+	
+	public List<JUSTIFICANTE> readJustificantes(VIAJE viaje){
+		return viaje.getJustificantes();
+	}
+	
+	public List<JUSTIFICANTE> readJustificantesEnviados(VIAJE viaje){
+		return viaje.getJustificantesEnviados();
+	}
+	
+	@Override
+	public List<JUSTIFICANTE> readJustificantesSinEnviar(VIAJE viaje) {
+		return viaje.getJustificantesSinEnviar();
+	}
+	
+	@Override
+	public List<JUSTIFICANTE> readJustificantesAprobados(VIAJE viaje) {
+		return viaje.getJustificantesAprobados();
+	}
+	
+	@Override
+	public List<JUSTIFICANTE> readJustificantesPagados(VIAJE viaje) {
+		return viaje.getJustificantesPagados();
+	}
+	
+	@Override
+	public JUSTIFICANTE update(JUSTIFICANTE justificante) {
+		ofy().save().entity(justificante).now();
+		return justificante;
+	}
+	
+	public void deleteJustificante(JUSTIFICANTE justificante, VIAJE viaje){
+		viaje.deleteJustificante(justificante);
+		ofy().save().entity(viaje).now();
+		ofy().delete().entity(justificante).now();
+	}
+	
 	//******** VIAJES ************//
 
 	@Override
@@ -32,7 +97,13 @@ public class VIAJESDAOImpl implements VIAJESDAO {
 		int estado, String destinoCiudad, String destinoPais, String destinoProvincia, String motivo) {
 		VIAJE viaje= null;
 		List<VIAJE> todosLosViajes =   ofy().load().type(VIAJE.class).list();
-		long numeroViaje = todosLosViajes.size()+1;
+		long idMasAlto=0;
+		for(VIAJE viajei: todosLosViajes){
+			if(viajei.getNumeroViaje()>idMasAlto){
+				idMasAlto = viajei.getNumeroViaje();
+			}
+		}
+		long numeroViaje = idMasAlto+1;
 		viaje = new VIAJE(numeroViaje, empleado, fechaInicio, fechaFin, proyecto, estado, destinoCiudad, destinoPais, destinoProvincia, motivo);
 		ofy().save().entity(viaje).now();
 		return viaje;
@@ -91,8 +162,14 @@ public class VIAJESDAOImpl implements VIAJESDAO {
 
 	@Override
 	public List<VIAJE> readViajesEmpleado(EMPLEADO empleado) {
-		List<VIAJE> viajes =  ofy().load().type(VIAJE.class).filter("empleado", empleado).list();
-		return viajes;
+		List<VIAJE> todosLosViajes =   ofy().load().type(VIAJE.class).list();
+		ArrayList<VIAJE> viajesConEmpleado = new ArrayList<>();
+		for (VIAJE viajei : todosLosViajes) {
+			if(viajei.getEmpleado().getNombre().equals(empleado.getNombre())){
+				viajesConEmpleado.add(viajei);
+			}
+		}
+		return viajesConEmpleado;
 	}
 
 	@Override
@@ -116,7 +193,6 @@ public class VIAJESDAOImpl implements VIAJESDAO {
 	@Override
 	public void delete(VIAJE viaje) {
 		ofy().delete().entity(viaje).now();
-
 	}
 
 	//******** EMPLEADOS ************//
@@ -198,9 +274,12 @@ public class VIAJESDAOImpl implements VIAJESDAO {
 	public List<PROYECTO> readProyectosEmpleado(EMPLEADO empleado) {
 		List<PROYECTO> todosLosProyectos =   ofy().load().type(PROYECTO.class).list();
 		ArrayList<PROYECTO> proyectosConEmpleado = new ArrayList<>();
-		for (PROYECTO proyecto : todosLosProyectos) {
-			if(proyecto.getEmpleadosDelProyecto().contains(empleado)){
-				proyectosConEmpleado.add(proyecto);
+		for (PROYECTO proyectoi : todosLosProyectos) {
+			ArrayList<EMPLEADO> empleadosDelProyecto = proyectoi.getEmpleadosDelProyecto();
+			for (EMPLEADO empleadoi : empleadosDelProyecto) {
+				if(empleadoi.getNombre().equals(empleado.getNombre())){
+					proyectosConEmpleado.add(proyectoi);
+				}
 			}
 		}
 		return proyectosConEmpleado;
@@ -216,6 +295,5 @@ public class VIAJESDAOImpl implements VIAJESDAO {
 	public void delete(PROYECTO proyecto) {
 		ofy().delete().entity(proyecto).now();
 	}
-
-
+	
 }

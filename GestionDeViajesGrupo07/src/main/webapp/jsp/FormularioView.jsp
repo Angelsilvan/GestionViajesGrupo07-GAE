@@ -12,105 +12,142 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+<title>iTravel - Formulario</title>
+<link href="../css/main.css" rel="stylesheet" type="text/css"
+	media="all">
 </head>
 <body>
-	<h3>Sistema de gestión de viajes</h3>
 	<c:if test="${not empty user}">
+		<div class="navegador">
+			<div class="container">
+				<div class="nav nav-pills">
+					<c:if test="${empleado == null}">
+						<div class="navButtonWidth">
+							<a class="navButton" href="<c:url value="${url}"/>"><c:out
+									value="${urlLinktext}" /></a>
+						</div>
+					</c:if>
+					<c:if test="${empleado != null}">
+						<div class="navButtonWidth">
+							<form action="/isst_viajes" method="get">
+								<input class="navButton" type="submit" value="Inicio" />
+							</form>
+						</div>
+						<div class="navButtonWidth">
+							<form action="/vistaFormulario" method="post">
+								<input class="navButton active" type="submit"
+									value="Solicitud Viaje" />
+							</form>
+						</div>
+						<div class="navButtonWidth">
+							<form action="/vistaMisViajes" method="post">
+								<input class="navButton" type="submit" value="Mis Viajes" />
+							</form>
+						</div>
+						<c:if test="${not empty viajesSupervisor}">
+							<div class="navButtonWidth">
+								<form action="/vistaResponsable" method="post">
+									<input class="navButton" type="submit"
+										value="Viajes de mis empleados" />
+								</form>
+							</div>
+						</c:if>
+						<div class="navButtonWidth">
+							<a class="navButton" href="<c:url value="${url}"/>"><c:out
+									value="${urlLinktext}" /></a>
+						</div>
+					</c:if>
+				</div>
+			</div>
+		</div>
 		<c:if test="${empleado == null}">
-			<p>Usuario no registrado</p>
-			<p>
-				<u>Introduzca los datos en el formulario para registrarse:</u>
-			</p>
-			<form action="/nuevoEmpleado" method="post" acceptcharset="utf-8">
-				<p>
-					Numero de empleado: <input type="text" name="numeroEmpleado"
-						id="numeroEmpleado" maxLength="255" size="20"
-						placeholder="Numero de empleado" />
-				</p>
-				<p>
-					Nombre: <input type="text" name="nombre" id="nombre"
-						maxLength="255" size="20" required placeholder="Nombre"
-						value="<c:out value="${user}"/>" readonly />
-				</p>
-				<p>
-					Primer Apellido: <input type="text" name="apellido1" id="apellido1"
-						maxLength="255" required size="20" placeholder="Primer apellido" />
-				</p>
-				<p>
-					Segundo Apellido: <input type="text" name="apellido2"
-						id="apellido2" maxLength="255" required size="20"
-						placeholder="Segundo apellido" />
-				</p>
-				<input type="submit" value="Send" />
-			</form>
+			<div class="usuarioNoRegistrado">
+		        	<div class="clearfix">
+						<h1>Usuario no registrado</h1>
+						<h3>No hay ningún empleado con este correo electrónico</h3>
+					</div>
+				</div>
 		</c:if>
-		<c:if test="${empleado != null}">
-			<form action="/vistaFormulario" method="post">
-				<input type="submit" value="Solicitud Viaje" />
-			</form>
-			<form action="/vistaMisViajes" method="post">
-				<input type="submit" value="Mis Viajes" />
-			</form>
-			<p>
-				<u>Introduzca los datos en el formulario para solicitar un
-					viaje:</u>
-			</p>
-			<form action="/nuevoViaje" method="post" acceptcharset="utf-8">
-				<p>
-					Nombre: <input type="text" name="nombre" id="nombre"
-						maxLength="255" size="20" placeholder="Nombre"
-						value="<c:out value="${user}"/>" readonly />
-				</p>
-				<p>
-					Numero de empleado: <input type="text" name="numeroEmpleado"
-						id="numeroEmpleado" maxLength="255" size="20" required
-						placeholder="Numero de empleado"
-						value="<c:out value="${empleado.numeroEmpleado}"/>" readonly />
-				</p>
-				<p>
-					Fecha de inicio: <input type="text" name="fechaInicio"
-						id="fechaInicio" maxLength="255" required size="20"
-						placeholder="Fecha de inicio del viaje" />
-				</p>
-				<p>
-					Fecha de finalizacion: <input type="text" name="fechaFin"
-						id="fechaFin" maxLength="255" required size="20"
-						placeholder="Fecha de finalizacion del viaje" />
-				</p>
-				<p>
-					Proyecto: <input type="text" name="proyecto" id="proyecto"
-						maxLength="255" required size="20"
-						placeholder="Código de proyecto" />
-				</p>
-				<p>
-					Ciudad de destino: <input type="text" name="destinoCiudad"
-						id="destinoCiudad" maxLength="255" required size="20"
-						placeholder="Ciudad destino" />
-				</p>
-				<p>
-					Provincia de destino: <input type="text" name="destinoProvincia"
-						id="destinoProvincia" maxLength="255" required size="20"
-						placeholder="Provincia de destino" />
-				</p>
-				<p>
-					Pais de destino: <input type="text" name="destinoPais"
-						id="destinoPais" maxLength="255" required size="20"
-						placeholder="Pais de destino" />
-				</p>
-				<p>
-					Motivo: <input type="text" name="motivo" id="motivo"
-						maxLength="255" required size="20" placeholder="Motivo del viaje" />
-				</p>
-				<input type="submit" value="Send" />
-			</form>
+		<c:if test="${empleado !=null and not empty proyectosEmpleado}">
+			<div class="formularioView">
+				<div class="container">
+					<h1 class="cabeceraTablaViajes">Introduzca los datos en el
+						formulario para solicitar un viaje:</h1>
+					<form action="/nuevoViaje" method="post" acceptcharset="utf-8">
+						<fieldset id="formViaje">
+							<p>
+								Nombre:
+								<c:out value="${empleado.apellido1}" />
+								<c:out value="${empleado.apellido2}" />
+								(
+								<c:out value="${empleado.nombre}" />
+								) <input name="nombre" id="nombre" value="${empleado.nombre}"
+									type="hidden" />
+							</p>
+							<p>
+								Numero de empleado:
+								<c:out value="${empleado.numeroEmpleado}" />
+							</p>
+							<p>
+								Fecha de inicio: <input type="text" name="fechaInicio"
+									id="fechaInicio" maxLength="255" required size="20"
+									placeholder="Fecha de inicio del viaje" />
+							</p>
+							<p>
+								Fecha de finalizacion: <input type="text" name="fechaFin"
+									id="fechaFin" maxLength="255" required size="20"
+									placeholder="Fecha de finalizacion del viaje" />
+							</p>
+							<p>
+								Proyecto: <select required name="proyecto" id="proyecto">
+									<c:forEach items="${proyectosEmpleado}" var="proyectoi">
+										<option value="${proyectoi.codigoProyecto}"><c:out
+												value="${proyectoi.codigoProyecto}" /></option>
+									</c:forEach>
+								</select>
+							</p>
+							<p>
+								Ciudad de destino: <input type="text" name="destinoCiudad"
+									id="destinoCiudad" maxLength="255" required size="20"
+									placeholder="Ciudad destino" />
+							</p>
+							<p>
+								Provincia de destino: <input type="text" name="destinoProvincia"
+									id="destinoProvincia" maxLength="255" required size="20"
+									placeholder="Provincia de destino" />
+							</p>
+							<p>
+								Pais de destino: <input type="text" name="destinoPais"
+									id="destinoPais" maxLength="255" required size="20"
+									placeholder="Pais de destino" />
+							</p>
+							<p>
+								Motivo: <input type="text" name="motivo" id="motivo"
+									maxLength="255" required size="20"
+									placeholder="Motivo del viaje" />
+							</p>
+							<input class="aceptarViaje" type="submit" value="Send" />
+						</fieldset>
+					</form>
+				</div>
+			</div>
 		</c:if>
+		<c:if test="${empty proyectosEmpleado}">
+			<div class="formularioView">
+				<div class="container">
+					<h1 class="cabeceraTablaViajes">No puede solicitar un viaje por que no tiene ningun proyecto actualmente</h1>
+				</div>
+			</div>
+		</c:if>
+		<div class="footer">
+			<div class="container">
+				<p>Grupo 7</p>
+				<p class="a-center">
+					<a href="https://www.upm.es">Universidad Politécnica De Madrid</a>
+				</p>
+				<p class="p-right" id="fecha">ISST 2017</p>
+			</div>
+		</div>
 	</c:if>
-	<p>
-		Puedes acceder a este link para hacer
-		<c:out value="${urlLinktext}" />
-		: <a href="<c:url value="${url}"/>"><c:out value="${urlLinktext}" /></a>
-	</p>
 </body>
 </html>

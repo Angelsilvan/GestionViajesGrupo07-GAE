@@ -3,12 +3,35 @@ package es.upm.dit.isst.gestiondeviajesgrupo07.dao;
 import java.util.*;
 
 import es.upm.dit.isst.gestiondeviajesgrupo07.model.EMPLEADO;
+import es.upm.dit.isst.gestiondeviajesgrupo07.model.JUSTIFICANTE;
 import es.upm.dit.isst.gestiondeviajesgrupo07.model.PROYECTO;
 import es.upm.dit.isst.gestiondeviajesgrupo07.model.VIAJE;
 
 
 public interface VIAJESDAO {
+	
+	//******** JUSTIFICANTES ************//
 
+	/**
+	 * Método para crear un nuevo objeto de la clase JUSTIFICANTE
+	 */
+	public JUSTIFICANTE createJustificante(String concepto, long importe, String fichero, VIAJE viaje);
+	
+	/**
+	 * Metodo para obtener todos los objetos justificante pasandole el numero de viaje
+	 * @param numeroViaje
+	 * @return
+	 */
+	public List<JUSTIFICANTE> readJustificantes(VIAJE viaje);
+	
+	/**
+	 * Método para borrar un justificante
+	 * @param numeroJustificante. Justificante que se desea borrar.
+	 */
+	public void deleteJustificante(JUSTIFICANTE justificante, VIAJE viaje);
+	
+	
+	
 	//******** VIAJES ************//
 
 	/**
@@ -22,6 +45,7 @@ public interface VIAJESDAO {
 	 * @return
 	 */
 	public VIAJE readViaje(String numeroViaje);	
+	
 	/**
 	 * Método para leer todos los VIAJES
 	 */	
@@ -165,6 +189,16 @@ public interface VIAJESDAO {
 	 * @param proyecto. Proyecto que se desea borrar.
 	 */
 	public void delete (PROYECTO proyecto);
+
+	public List<JUSTIFICANTE> readJustificantesEnviados(VIAJE viaje);
+
+	public List<JUSTIFICANTE> readJustificantesSinEnviar(VIAJE viaje);
+
+	public JUSTIFICANTE update(JUSTIFICANTE justificante);
+
+	public List<JUSTIFICANTE> readJustificantesAprobados(VIAJE viaje);
+
+	public List<JUSTIFICANTE> readJustificantesPagados(VIAJE viaje);
 
 
 

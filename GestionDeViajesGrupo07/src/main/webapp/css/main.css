@@ -6,19 +6,27 @@ html, body {
   font-size: 16px;
 }
 
-.detallesViaje{
-  background: url("images/misViajesAclarado.jpg") no-repeat center center;
-  background-size: 100%;
-  height: 35em;
-  width: 100%;
-  text-align: center;
-}
-
 /* Login */
 
 .index{
   background: url("images/fondoLoginAclarado.jpg") no-repeat center center;  
-  height:40em;
+  background-size: cover;
+  height: 91%;
+  width: 100%;
+  text-align: center;
+  position: fixed;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+.usuarioNoRegistrado{
+  background: url("images/UsuarioNoRegistrado.jpg") no-repeat center center;  
+/*   background-size: cover; */
+  height: 81%;
+  width: 100%;
+  text-align: center;
+  position: fixed;
+  overflow: scroll;
+  overflow-x: hidden;
 }
 .login{
   text-align:center;
@@ -40,10 +48,7 @@ button{
   box-shadow:0 2px 4px rgba(0,0,0,.5); 
   color:#fff;
 }
-.aceptarViaje{
-  border: 1px solid green;
-  background-color: green;
-}
+
 button:hover{
   cursor: pointer;  
 }
@@ -57,14 +62,14 @@ button:hover{
 
 /* Container*/
 .container {
-  max-width: 940px;
+  max-width: 80%;
   margin: 0 auto;
 }
 
 /* Navegador */
 .navegador{
 	background-color: #EEEEEE;
-
+	height: 10%;
 }
 
 .nav{
@@ -72,22 +77,61 @@ button:hover{
   padding: 15px;
 }
 
-.nav-pills li a {
+.container>h1,
+.container>h3{
+	text-align: center;
+}
+
+.navButton {
   color: #d8192f;
   border: 1px solid #D8192F;
   border-radius: 5px;
   padding: 10px 15px;
   text-decoration: none;
   margin: 7px;
+  background: none;
+  font: 11px system-ui;
+}
+
+.navButtonWidth{
+	display: inline-block;
 }
 
 
-.nav-pills .active a,
-.nav-pills li a:hover,
-.section .btn:hover {
+.active,
+.navButton:hover{
   background-color:rgba(216,25,47,1);
   box-shadow:0 2px 4px rgba(0,0,0,.5); 
   color:#fff;
+  cursor: pointer;
+}
+
+.aceptarViaje{
+  border: 1px solid green;
+  background-color: green;
+  color:#fff;
+  border-radius: 5px;
+  padding: 10px 15px;
+  text-decoration: none;
+  margin: 7px;
+  font: 11px system-ui;
+}
+.aceptarViaje:hover{
+	cursor: pointer;
+}
+
+.aceptarViajeDeshabilitado{
+  border: 1px solid green;
+  background-color: green;
+  opacity: 0.65;
+  cursor: not-allowed;
+  color:#fff;
+  border-radius: 5px;
+  padding: 10px 15px;
+  text-decoration: none;
+  margin: 7px;
+  font: 11px system-ui;
+  disabled: true;
 }
 
 li{
@@ -96,36 +140,32 @@ li{
 }
 
 a:visited{
-  color: blue;  
+  text-decoration:none;  
 }
 
 a{
-  color: blue;
+  text-decoration: none;
 }
 
 
 /* Index */
 
-.inicioEmpleado, .inicioResponsable, .inicioGestionGastos{
+.inicioEmpleado{
   height:35em;
 }
 
 .inicioEmpleado .clearfix{
   background: url("images/fondoViajeAclarado.jpg") no-repeat center center;
-}
-
-.inicioResponsable .clearfix{
-  background: url("images/papeleoAclarado.jpg") no-repeat center center;
-}
-.inicioGestionGastos .clearfix{
-  background: url("images/moneyAclarado.jpg") no-repeat center center;
-  background-size: 100%;
+  background-size: cover;
+  height: 81%;
+  width: 100%;
+  text-align: center;
+  position: fixed;
+  overflow: scroll;
+  overflow-x: hidden;
 }
 .inicioResponsable h1{
   margin-top: 5em;
-}
-.inicioGestionGastos h1{
-  margin-top: 4em;
 }
 
 
@@ -143,22 +183,41 @@ a{
 
 /* Form Solicitud De Viaje*/
 
-.solicitudViaje{
+.formularioView{
   background: url("images/cropAclarado.jpg") no-repeat center center;
-  background-size: 100%;
+  background-size: cover;
+  height: 81%;
+  width: 100%;
+  position: fixed;
+  overflow: scroll;
+  overflow-x: hidden;
 }
 
-#datosViaje, #datosProyecto{
+#formViaje{
    background-color: rgba(255, 255, 255, 0.35);
 }
 /* Mis Viajes - Detalle Viajes*/
 
-.misViajes{
+.detallesViaje{
   background: url("images/misViajesAclarado.jpg") no-repeat center center;
-  background-size: 100%;
-  height: 35em;
+  background-size: cover;
+  height: 81%;
   width: 100%;
   text-align: center;
+  position: fixed;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+.responsableView{
+  background: url("images/misViajesAclarado.jpg") no-repeat center center;
+  background-size: cover;
+  height: 81%;
+  width: 100%;
+  text-align: center;
+  position: fixed;
+  overflow: scroll;
+  overflow-x: hidden;
 }
 
 .tablaViajes{
@@ -175,6 +234,7 @@ a{
   border: 1px solid black;
   border-collapse: collapse;
   padding:0.75em;
+  margin-bottom: 2%;
 }
 
 .tablaViajes tr:nth-child(even) {
@@ -188,36 +248,54 @@ a{
     color: white;
 }
 
-/* Viajes Confirmados */
+.submitToUrl{
+	border: none;
+	background: none;
+	text-decoration: underline;
+	color: blue;
+  	font: 11px system-ui;
+}
+.submitToUrl:hover{
+	cursor:pointer;
+}
 
-.viajesConfirmados{
+/* Justificantes Mis Viajes */
+
+.justificantesMisViajes{
   background: url("images/approvedListAclarado.jpg") no-repeat center center;
-  background-size: 100%;
-  height: 35em;
+  background-size: cover;
+  height: 81%;
   width: 100%;
   text-align: center;
+  position: fixed;
+  overflow: scroll;
+  overflow-x: hidden;
 }
 
 /* Viajes Pendientes*/
 .viajesPendientes{
   background: url("images/PendingAclarado.jpg") no-repeat center center;
-  background-size: 100%;
-  height: 35em;
+  background-size: cover;
+  height: 81%;
   width: 100%;
   text-align: center;
+  position: fixed;
+  overflow: scroll;
+  overflow-x: hidden;
 }
 
 
 /* Footer */
 
 .footer{
-	background-color: #EEEEEE;
+  background-color: #EEEEEE;
   font-size: 14px;
   bottom: 0;
   right:0;
   left:0;
-  padding-top: 2em;
-  padding-bottom: 2em;
+  height: 10%;
+/*   padding-top: 2em; */
+/*   padding-bottom: 2em; */
   position: fixed;
 }
 
